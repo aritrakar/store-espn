@@ -1,0 +1,37 @@
+{
+    "title": "CheerioCrawler Template",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "scrapeMatchList": {
+            "title": "Scrape list of matches",
+            "type": "boolean",
+            "description": "Actor will scrape matches for given leagues, seasons and season types",
+            "default": false
+        },
+        "years": {
+            "title": "Years to scrape",
+            "type": "array",
+            "description": "For sports, that have season partially in two years, use the year when season ends",
+            "editor": "stringList",
+            "prefill": ["2022"],
+            "patternValue": "[0-9]{4}"
+        },
+        "seasonTypes": {
+            "title": "Season types to scrape",
+            "type": "array",
+            "description": "Possible values: pre - Pre-season, reg - Regular season, post - Post-season (/Playoff), off - Off-season",
+            "editor": "stringList",
+            "prefill": ["reg", "post"],
+            "patternValue": "(\\bpre\\b)|(\\breg\\b)|(\\bpost\\b)|(\\boff\\b)"
+        },
+        "leagues": {
+            "title": "Leagues to scrape",
+            "type": "array",
+            "description": "Possible values: mlb",
+            "editor": "stringList",
+            "prefill": ["mlb"],
+            "patternValue": "(\\bmlb\\b)"
+        }
+    }
+}
