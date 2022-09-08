@@ -61,6 +61,10 @@ export const parseInput = (input: InputOptions): ParsedInput => {
 export const getSportByLeague = (league: Leagues) => {
     const mappings = {
         [Leagues.MLB]: Sports.Baseball,
+        [Leagues.NHL]: Sports.Hockey,
+        [Leagues.NBA]: Sports.Basketball,
+        [Leagues.WNBA]: Sports.Basketball,
+        [Leagues.NFL]: Sports.Football,
     };
 
     return mappings[league];

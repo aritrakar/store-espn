@@ -1,6 +1,6 @@
 import { createHttpRouter } from 'crawlee';
 import { Actor } from 'apify';
-import { Labels, Leagues, ResultTypes, ScoreboardResponse, Sports, StandingsResponse } from './types.js';
+import { Labels, ResultTypes, ScoreboardResponse, StandingsResponse } from './types.js';
 import { getDatesBetween } from './tools/generic.js';
 import { getScoreboardUrl } from './tools/url.js';
 import { getCompetitionData } from './tools/extractors.js';
@@ -43,7 +43,7 @@ router.addHandler(Labels.ScoreDates, async ({ crawler, request, log, json }) => 
         // Add each day to request queue
         days.forEach((day) => {
             crawler.requestQueue?.addRequest({
-                url: getScoreboardUrl(Sports.Baseball, Leagues.MLB, day),
+                url: getScoreboardUrl(sport, league, day),
                 userData: {
                     year: season.year,
                     type: season.type,

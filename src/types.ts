@@ -1,9 +1,16 @@
 export enum Sports {
     Baseball = 'baseball',
+    Hockey = 'hockey',
+    Basketball = 'basketball',
+    Football = 'football',
 }
 
 export enum Leagues {
     MLB = 'mlb',
+    NHL = 'nhl',
+    NBA = 'nba',
+    WNBA = 'wnba',
+    NFL = 'nfl',
 }
 
 export enum Labels {
