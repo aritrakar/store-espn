@@ -1,5 +1,6 @@
 import { Request } from 'crawlee';
-import { Labels, Leagues, ParsedInput, Sports } from '../types.js';
+import { Labels, Leagues, Sports } from '../types/enum.js';
+import { ParsedInput } from '../types/base.js';
 import { BASE_URL } from '../constants.js';
 import { getSportByLeague } from './generic.js';
 
@@ -12,6 +13,14 @@ export const getStandingsUrl = (sport: Sports, league: Leagues, season: number) 
     return url.toString();
 };
 
+export const getGameSummaryUrl = (sport: Sports, league: Leagues, gameId: number) => {
+    const url = new URL(`${BASE_URL}/apis/site/v2/sports/${sport}/${league}/summary`);
+    url.searchParams.set('lang', 'en');
+    url.searchParams.set('region', 'us');
+    url.searchParams.set('event', gameId.toString());
+    return url.toString();
+};
+
 export const getScoreboardUrl = (sport: Sports, league: Leagues, date: string) => {
     const url = new URL(`${BASE_URL}/apis/site/v2/sports/${sport}/${league}/scoreboard`);
     url.searchParams.set('dates', date);
@@ -21,6 +30,7 @@ export const getScoreboardUrl = (sport: Sports, league: Leagues, date: string) =
 export const getStartRequests = (input: ParsedInput): Request[] => {
     const requests = [];
     if (input.scrapeMatchList) requests.push(...getMatchListStartRequests(input));
+    if (input.scrapeMatchDetails) requests.push(...getMatchGamesStartRequests(input));
     return requests;
 };
 
@@ -47,5 +57,26 @@ const getMatchListStartRequests = (input: ParsedInput): Request[] => {
         }));
     }
 
+    return requests;
+};
+
+const getMatchGamesStartRequests = (input: ParsedInput): Request[] => {
+    const {
+        games,
+        gameDetailsSport,
+        gameDetailsLeague,
+    } = input;
+
+    const requests = [];
+    for (const game of games) {
+        requests.push(new Request({
+            url: getGameSummaryUrl(gameDetailsSport, gameDetailsLeague, game),
+            userData: {
+                label: Labels.MatchDetail,
+                sport: gameDetailsSport,
+                league: gameDetailsLeague,
+            },
+        }));
+    }
     return requests;
 };

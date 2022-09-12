@@ -1,9 +1,11 @@
 import { createHttpRouter } from 'crawlee';
 import { Actor } from 'apify';
-import { Labels, ResultTypes, ScoreboardResponse, StandingsResponse } from './types.js';
+import { Labels, ResultTypes } from './types/enum.js';
+import { ScoreboardResponse, StandingsResponse } from './types/base.js';
+import { BaseballEventSummaryResponse } from './types/baseball.js';
 import { getDatesBetween } from './tools/generic.js';
 import { getScoreboardUrl } from './tools/url.js';
-import { getCompetitionData } from './tools/extractors.js';
+import { getBaseballMatchInformationData, getCompetitionData } from './tools/extractors.js';
 
 export const router = createHttpRouter();
 
@@ -61,21 +63,43 @@ router.addHandler(Labels.ScoreDates, async ({ crawler, request, log, json }) => 
  */
 router.addHandler(Labels.ScoreBoard, async ({ json, log, request }) => {
     log.info(`${request.label}: Parsing one day scoreboard - ${request.url}`);
-    const response = json as ScoreboardResponse;
     const { year, type, sport, league } = request.userData;
+    const response = json as ScoreboardResponse;
     for (const event of response.events) {
-        if (event.competitions.length === 0) continue;
+        try {
+            if (event.competitions.length === 0) continue;
 
-        const competition = event.competitions[0];
-        const competitionData = getCompetitionData(competition);
+            const competition = event.competitions[0];
+            const competitionData = getCompetitionData(competition);
+            await Actor.pushData({
+                ...competitionData,
+                sport,
+                league,
+                season: year,
+                seasonType: type,
+                url: request.loadedUrl,
+                resultType: ResultTypes.MatchList,
+            });
+        } catch (err) {
+            throw new Error(`Unable to parse match list data - ${request.loadedUrl}, Error: ${err}`);
+        }
+    }
+});
+
+/**
+ * Route calls event summary endpoint and saves both general and sport specific data about this event
+ */
+router.addHandler(Labels.MatchDetail, async ({ json, log, request }) => {
+    log.info(`${request.label}: Parsing match detail - ${request.url}`);
+    const response = json as BaseballEventSummaryResponse;
+    try {
+        const matchDetailData = getBaseballMatchInformationData(response);
+
         await Actor.pushData({
-            ...competitionData,
-            sport,
-            league,
-            season: year,
-            seasonType: type,
-            url: request.loadedUrl,
-            resultType: ResultTypes.MatchList,
+            ...matchDetailData,
+            type: ResultTypes.MatchDetail,
         });
+    } catch (err) {
+        throw new Error(`Unable to parse match detail - ${request.loadedUrl}, Error: ${err}`);
     }
 });

@@ -1,7 +1,7 @@
 import { Actor } from 'apify';
 import { HttpCrawler } from 'crawlee';
 import { router } from './routes.js';
-import { InputOptions } from './types.js';
+import { InputOptions } from './types/base.js';
 import { parseInput } from './tools/generic.js';
 import { getStartRequests } from './tools/url.js';
 
@@ -12,10 +12,10 @@ if (!input) throw new Error('Input not provided');
 
 const parsedInput = parseInput(input);
 const startUrls = getStartRequests(parsedInput);
-const proxyConfiguration = await Actor.createProxyConfiguration();
+// const proxyConfiguration = await Actor.createProxyConfiguration();
 
 const crawler = new HttpCrawler({
-    proxyConfiguration,
+    // proxyConfiguration,
     requestHandler: router,
 });
 

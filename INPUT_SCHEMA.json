@@ -28,10 +28,26 @@
         "leagues": {
             "title": "Leagues to scrape",
             "type": "array",
-            "description": "Possible values: mlb",
+            "description": "Possible values: mlb, nhl, nba, wnba, nfl",
             "editor": "stringList",
             "prefill": ["mlb"],
-            "patternValue": "(\\bmlb\\b)"
+            "patternValue": "(\\bmlb\\b)|(\\bnhl\\b)|(\\bnba\\b)|(\\bwnba\\b)|(\\bnfl\\b)"
+        },
+        "games": {
+            "title": "Games to scrape",
+            "type": "array",
+            "description": "Either game ID (e.g. 401461551), or game URL (e.g. https://www.espn.com/nhl/game/_/gameId/401461551)",
+            "editor": "stringList",
+            "prefill": ["reg", "post"],
+            "patternValue": "(\\bpre\\b)|(\\breg\\b)|(\\bpost\\b)|(\\boff\\b)"
+        },
+        "gameDetailsLeague": {
+            "title": "League of games to scrape",
+            "type": "string",
+            "description": "Possible values: mlb, nhl, nba, wnba, nfl",
+            "editor": "textfield",
+            "prefill": "mlb",
+            "pattern": "(\\bmlb\\b)|(\\bnhl\\b)|(\\bnba\\b)|(\\bwnba\\b)|(\\bnfl\\b)"
         }
     }
 }
