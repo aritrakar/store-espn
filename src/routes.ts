@@ -2,10 +2,12 @@ import { createHttpRouter } from 'crawlee';
 import { Actor } from 'apify';
 import { Labels, ResultTypes } from './types/enum.js';
 import { ScoreboardResponse, StandingsResponse } from './types/base.js';
-import { BaseballEventSummaryResponse } from './types/baseball.js';
 import { getDatesBetween } from './tools/generic.js';
 import { getScoreboardUrl } from './tools/url.js';
-import { getBaseballMatchInformationData, getCompetitionData } from './tools/extractors.js';
+import {
+    getCompetitionData,
+    getMatchInformationDataBySport,
+} from './tools/extractors.js';
 
 export const router = createHttpRouter();
 
@@ -91,13 +93,12 @@ router.addHandler(Labels.ScoreBoard, async ({ json, log, request }) => {
  */
 router.addHandler(Labels.MatchDetail, async ({ json, log, request }) => {
     log.info(`${request.label}: Parsing match detail - ${request.url}`);
-    const response = json as BaseballEventSummaryResponse;
+    const { sport } = request.userData;
     try {
-        const matchDetailData = getBaseballMatchInformationData(response);
-
+        const matchDetailData = getMatchInformationDataBySport(json, sport);
         await Actor.pushData({
             ...matchDetailData,
-            type: ResultTypes.MatchDetail,
+            resultType: ResultTypes.MatchDetail,
         });
     } catch (err) {
         throw new Error(`Unable to parse match detail - ${request.loadedUrl}, Error: ${err}`);

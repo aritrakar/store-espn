@@ -59,7 +59,7 @@ export const parseInput = (input: InputOptions): ParsedInput => {
     const scrapeMatchDetails = games.length > 0;
 
     if (scrapeMatchDetails && !gameDetailsLeague) {
-        throw new Error('For game details scraping, you have to provide gamesLeague input');
+        throw new Error('For game details scraping, you have to provide gameDetailsLeague input');
     }
 
     if (!isEnumType<Leagues>(gameDetailsLeague as Leagues)) {

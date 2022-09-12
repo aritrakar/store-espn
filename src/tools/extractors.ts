@@ -1,6 +1,8 @@
+import { Dictionary } from 'crawlee';
 import { BoxScoreResponse, CompetitionResponse, EventSummaryResponse, VenueResponse } from '../types/base.js';
 import { BaseballEventSummaryResponse, BaseballPlayInformation } from '../types/baseball.js';
-import { BaseballPlayerTypes, BaseballPlayTypes } from '../types/enum.js';
+import { BaseballPlayerTypes, BaseballPlayTypes, BasketballScoreTypes, Sports } from '../types/enum.js';
+import { BasketballEventSummaryResponse, BasketballPlayInformation } from '../types/basketball';
 
 export type VenueData = {
     capacity: number,
@@ -79,6 +81,25 @@ interface BaseballMatchDetailData extends MatchDetailData {
     atBats: BaseballAtBatData[],
 }
 
+interface BasketballMatchDetailData extends MatchDetailData {
+    scoring: BasketballScoringData[],
+}
+
+interface BasketballScoringData {
+    id: string,
+    homeScore: number,
+    awayScore: number,
+    scored: boolean,
+    type: BasketballScoreTypes,
+    player?: {
+        id: string,
+        name: string,
+        team: string,
+    },
+    description: string,
+    timeInSeconds: number,
+}
+
 /**
  * Extracts general data about match.
  * Works for all supported sports, does not contain any sport specific logic
@@ -121,13 +142,28 @@ export const getCompetitionData = (competition: CompetitionResponse): Competitio
     };
 };
 
+export const getMatchInformationDataBySport = (json: Dictionary, sport: Sports) => {
+    if (sport === Sports.Baseball) {
+        const response = json as BaseballEventSummaryResponse;
+        return getBaseballMatchInformationData(response);
+    }
+
+    if (sport === Sports.Basketball) {
+        const response = json as BasketballEventSummaryResponse;
+        return getBasketballMatchInformationData(response);
+    }
+
+    const response = json as EventSummaryResponse;
+    return getGeneralMatchInformationData(response);
+};
+
 /**
  * Extracts baseball data for specific match
  *
  * @param eventSummary
  */
-export const getBaseballMatchInformationData = (eventSummary: BaseballEventSummaryResponse): BaseballMatchDetailData | null => {
-    const matchDetailData = getMatchInformationData(eventSummary);
+const getBaseballMatchInformationData = (eventSummary: BaseballEventSummaryResponse): BaseballMatchDetailData | null => {
+    const matchDetailData = getGeneralMatchInformationData(eventSummary);
     if (!matchDetailData) return null;
 
     const playerMap = getPlayerMap(matchDetailData.players);
@@ -140,13 +176,30 @@ export const getBaseballMatchInformationData = (eventSummary: BaseballEventSumma
 };
 
 /**
- * Extracts data for specific match.
- * Works for all supported sports, does not contain any sport specific logic.
- * Should be called by a function, that adds additional data for specific sport
+ * Extracts basketball data for specific match
  *
  * @param eventSummary
  */
-const getMatchInformationData = (eventSummary: EventSummaryResponse): MatchDetailData => {
+const getBasketballMatchInformationData = (eventSummary: BasketballEventSummaryResponse): BasketballMatchDetailData | null => {
+    const matchDetailData = getGeneralMatchInformationData(eventSummary);
+    if (!matchDetailData) return null;
+
+    const playerMap = getPlayerMap(matchDetailData.players);
+    const scoring = getBasketballScoringData(eventSummary, playerMap);
+
+    return {
+        ...matchDetailData,
+        scoring,
+    };
+};
+
+/**
+ * Extracts data for specific match.
+ * Works for all supported sports, does not contain any sport specific logic.
+ *
+ * @param eventSummary
+ */
+const getGeneralMatchInformationData = (eventSummary: EventSummaryResponse): MatchDetailData => {
     if (eventSummary.header.competitions.length === 0) throw new Error('No competition returned');
 
     const { attendance } = eventSummary.gameInfo;
@@ -318,4 +371,67 @@ const getBaseballAtBatsData = (eventSummary: BaseballEventSummaryResponse, athle
     }
 
     return parsedAtBats;
+};
+
+const getBasketballScoringData = (eventSummary: BasketballEventSummaryResponse, athletes: Map<string, MatchPlayerData>): BasketballScoringData[] => {
+    const parsedScoringData: BasketballScoringData[] = [];
+
+    const periodCount = eventSummary.format.regulation.periods;
+    const regulationLength = eventSummary.format.regulation.clock;
+    const overtimeLength = eventSummary.format.overtime.clock;
+
+    for (const play of eventSummary.plays) {
+        if (!play.shootingPlay) continue;
+        if (play.participants.length === 0) continue;
+
+        const playerId = play.participants[0].athlete.id;
+        const playerData = athletes.get(playerId);
+        const player = playerData ? {
+            id: playerId,
+            name: playerData.name,
+            team: playerData.team,
+        } : undefined;
+
+        parsedScoringData.push({
+            id: play.id,
+            homeScore: play.homeScore,
+            awayScore: play.awayScore,
+            scored: play.scoringPlay,
+            description: play.text,
+            type: getBasketballPlayType(play),
+            player,
+            timeInSeconds: getTimeInSeconds(play.period.number, play.clock.displayValue, periodCount, regulationLength, overtimeLength),
+        });
+    }
+
+    return parsedScoringData;
+};
+
+const getTimeInSeconds = (period: number, clock: string, periodCount: number, regulationLength: number, overtimeLength: number) => {
+    const tmp = clock.split(':');
+
+    // If less than minute is left on clock, only seconds are shown
+    const minutes = tmp.length > 1 ? parseInt(tmp[0], 10) : 0;
+    const seconds = tmp.length > 1 ? parseInt(tmp[1], 10) : parseInt(tmp[0], 10);
+
+    const currentPeriodLength = period <= periodCount ? regulationLength : overtimeLength;
+
+    const secondsTillPeriodEnd = minutes * 60 + seconds;
+    const secondsFromPeriodStart = currentPeriodLength - secondsTillPeriodEnd;
+
+    const pastRegulationPeriods = Math.min(period - 1, periodCount);
+    const pastOvertimePeriods = Math.max((period - 1) - periodCount, 0);
+
+    const secondsInPastPeriods = (pastRegulationPeriods * regulationLength) + (pastOvertimePeriods * overtimeLength);
+    return secondsInPastPeriods + secondsFromPeriodStart;
+};
+
+const getBasketballPlayType = (play: BasketballPlayInformation): BasketballScoreTypes => {
+    // Three pointers always have word 'three' in text description
+    if (play.text.toLowerCase().includes('three')) return BasketballScoreTypes.ThreePoints;
+
+    // Free throws always have 'Free Throw' in type description
+    if (play.type.text.toLowerCase().includes('free throw')) return BasketballScoreTypes.FreeThrow;
+
+    return BasketballScoreTypes.TwoPoints;
 };
