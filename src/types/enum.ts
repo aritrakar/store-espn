@@ -10,6 +10,8 @@ export enum Leagues {
     NHL = 'nhl',
     NBA = 'nba',
     WNBA = 'wnba',
+    CollegeBasketballMen = 'mens-college-basketball',
+    CollegeBasketballWomen = 'womens-college-basketball',
     NFL = 'nfl',
 }
 

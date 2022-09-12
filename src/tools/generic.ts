@@ -86,6 +86,8 @@ export const getSportByLeague = (league: Leagues) => {
         [Leagues.NHL]: Sports.Hockey,
         [Leagues.NBA]: Sports.Basketball,
         [Leagues.WNBA]: Sports.Basketball,
+        [Leagues.CollegeBasketballMen]: Sports.Basketball,
+        [Leagues.CollegeBasketballWomen]: Sports.Basketball,
         [Leagues.NFL]: Sports.Football,
     };
 
