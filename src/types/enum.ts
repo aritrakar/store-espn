@@ -45,9 +45,3 @@ export enum BaseballPlayerTypes {
     Batter = 'batter',
     Pitcher = 'pitcher',
 }
-
-export enum BasketballScoreTypes {
-    FreeThrow = 'free-throw',
-    TwoPoints = '2-pointer',
-    ThreePoints = '3-pointer',
-}

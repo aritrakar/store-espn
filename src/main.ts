@@ -1,13 +1,13 @@
 import { Actor } from 'apify';
 import { HttpCrawler } from 'crawlee';
 import { router } from './routes.js';
-import { InputOptions } from './types/base.js';
 import { parseInput } from './tools/generic.js';
 import { getStartRequests } from './tools/url.js';
+import { InputSchema } from './types/base.js';
 
 await Actor.init();
 
-const input = await Actor.getInput<InputOptions>();
+const input = await Actor.getInput<InputSchema>();
 if (!input) throw new Error('Input not provided');
 
 const parsedInput = parseInput(input);

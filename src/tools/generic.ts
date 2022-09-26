@@ -1,5 +1,5 @@
 import { Leagues, SeasonTypes, Sports } from '../types/enum.js';
-import { InputOptions, ParsedInput } from '../types/base.js';
+import { InputSchema, ParsedInput } from '../types/base.js';
 
 export const getDatesBetween = (startDateString: string, endDateString: string) => {
     const rangeEndDate = new Date(endDateString);
@@ -23,7 +23,7 @@ export const getDatesBetween = (startDateString: string, endDateString: string) 
     return days;
 };
 
-export const parseInput = (input: InputOptions): ParsedInput => {
+export const parseInput = (input: InputSchema): ParsedInput => {
     if (!input) throw new Error('Input not provided.');
 
     const {

@@ -1,6 +1,6 @@
 import { Request } from 'crawlee';
 import { Labels, Leagues, Sports } from '../types/enum.js';
-import { ParsedInput } from '../types/base.js';
+import { ParsedInput } from '../types/response/base.js';
 import { BASE_URL } from '../constants.js';
 import { getSportByLeague } from './generic.js';
 

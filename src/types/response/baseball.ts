@@ -1,5 +1,5 @@
 import { BasePlayInformation, EventSummaryResponse } from './base.js';
-import { BaseballPlayTypes } from './enum';
+import { BaseballPlayTypes } from '../enum';
 
 export interface BaseballPlayInformation extends BasePlayInformation {
     atBatId:string,

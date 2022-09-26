@@ -1,13 +1,13 @@
-import { createHttpRouter } from 'crawlee';
+import { createHttpRouter, Request } from 'crawlee';
 import { Actor } from 'apify';
-import { Labels, ResultTypes } from './types/enum.js';
-import { ScoreboardResponse, StandingsResponse } from './types/base.js';
+import { Labels, ResultTypes, Sports } from './types/enum.js';
+import { ScoreboardResponse, StandingsResponse } from './types/response/base.js';
 import { getDatesBetween } from './tools/generic.js';
 import { getScoreboardUrl } from './tools/url.js';
-import {
-    getCompetitionData,
-    getMatchInformationDataBySport,
-} from './tools/extractors.js';
+import { getBaseballMatchInformationData } from './extractors/baseball.js';
+import { getBasketballMatchInformationData } from './extractors/basketball.js';
+import { getHockeyMatchInformationData } from './extractors/hockey.js';
+import { getCompetitionData, getGeneralMatchInformationData } from './extractors/base.js';
 
 export const router = createHttpRouter();
 
@@ -40,13 +40,13 @@ router.addHandler(Labels.ScoreDates, async ({ crawler, request, log, json }) => 
     }
 
     // Enqueue scoreboard requests for each day of each season
-    allSeasons.forEach((season) => {
+    const requests = allSeasons.flatMap((season) => {
         const { startDate, endDate } = season;
         const days = getDatesBetween(startDate, endDate);
 
         // Add each day to request queue
-        days.forEach((day) => {
-            crawler.requestQueue?.addRequest({
+        return days.map((day) => {
+            return new Request({
                 url: getScoreboardUrl(sport, league, day),
                 userData: {
                     year: season.year,
@@ -58,6 +58,8 @@ router.addHandler(Labels.ScoreDates, async ({ crawler, request, log, json }) => 
             });
         });
     });
+
+    await crawler.addRequests(requests);
 });
 
 /**
@@ -95,11 +97,28 @@ router.addHandler(Labels.MatchDetail, async ({ json, log, request }) => {
     log.info(`${request.label}: Parsing match detail - ${request.url}`);
     const { sport } = request.userData;
     try {
-        const matchDetailData = getMatchInformationDataBySport(json, sport);
-        await Actor.pushData({
-            ...matchDetailData,
-            resultType: ResultTypes.MatchDetail,
-        });
+        switch (sport) {
+            case Sports.Baseball: {
+                const data = getBaseballMatchInformationData(json);
+                await Actor.pushData(data);
+                break;
+            }
+            case Sports.Basketball: {
+                const data = getBasketballMatchInformationData(json);
+                await Actor.pushData(data);
+                break;
+            }
+            case Sports.Hockey: {
+                const data = getHockeyMatchInformationData(json);
+                await Actor.pushData(data);
+                break;
+            }
+            default: {
+                const data = getGeneralMatchInformationData(json);
+                await Actor.pushData(data);
+                break;
+            }
+        }
     } catch (err) {
         throw new Error(`Unable to parse match detail - ${request.loadedUrl}, Error: ${err}`);
     }
