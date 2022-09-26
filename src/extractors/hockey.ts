@@ -27,10 +27,12 @@ const getHockeyShootingData = (eventSummary: HockeyEventSummaryResponse, playerM
     const periodCount = eventSummary.format.regulation.periods;
     const regulationLength = eventSummary.format.regulation.clock;
 
-    for (const play of eventSummary.plays) {
-        if (!play.shootingPlay) continue;
-        if (play.participants.length === 0) continue;
+    const filteredShootingPlays = eventSummary.plays
+        .filter((play) => play.shootingPlay)
+        .filter((play) => play.participants)
+        .filter((play) => play.participants.length > 0);
 
+    for (const play of filteredShootingPlays) {
         // Filter out participant with set ytdGoals (shooter)
         const shooter = play.participants.filter((player) => player.ytdGoals !== undefined)[0]?.athlete;
         if (!shooter) continue;
