@@ -148,9 +148,11 @@ router.addHandler(Labels.ArticleFeed, async ({ json, log, request, crawler }) =>
         .flatMap((feedItem) => getArticleData(feedItem.data.now, league));
 
     const articles = parsedFeedItems.filter((feedItem) => feedItem && typeof feedItem === 'object');
+    log.debug(`Pushing ${articles.length} articles to dataset from feed endpoint`);
     await Actor.pushData(articles);
 
     const articleUrls = parsedFeedItems.filter((feedItem) => typeof feedItem === 'string') as string[];
+    log.debug(`Enqueuing ${articleUrls.length} article details`);
     const articleDetailRequests = articleUrls.map((articleUrl) => {
         return new Request({
             url: getArticleDetailUrl(articleUrl),

@@ -1,6 +1,7 @@
 import { Leagues, SeasonTypes, Sports } from './enum.js';
 
 export type InputSchema = {
+    debug: boolean,
     scrapeMatchList: boolean,
     years: string[],
     seasonTypes: SeasonTypes[]

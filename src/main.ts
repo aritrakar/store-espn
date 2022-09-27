@@ -1,5 +1,5 @@
 import { Actor } from 'apify';
-import { HttpCrawler } from 'crawlee';
+import { HttpCrawler, log, LogLevel } from 'crawlee';
 import { router } from './routes.js';
 import { parseInput } from './tools/generic.js';
 import { getStartRequests } from './tools/url.js';
@@ -9,6 +9,10 @@ await Actor.init();
 
 const input = await Actor.getInput<InputSchema>();
 if (!input) throw new Error('Input not provided');
+
+if (input.debug) {
+    log.setLevel(LogLevel.DEBUG);
+}
 
 const parsedInput = parseInput(input);
 const startUrls = getStartRequests(parsedInput);
