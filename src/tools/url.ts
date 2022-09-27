@@ -1,6 +1,6 @@
 import { Request } from 'crawlee';
 import { Labels, Leagues, Sports } from '../types/enum.js';
-import { ARTICLE_FEED_LIMIT, API_BASE_URL, ONEFEED_BASE_URL, DOMAIN_NAME } from '../constants.js';
+import { ARTICLE_FEED_LIMIT, API_BASE_URL, ONEFEED_BASE_URL, DOMAIN_NAME, ARTICLE_FEED_PUBKEYS } from '../constants.js';
 import { getSportByLeague } from './generic.js';
 import { ParsedInput } from '../types/base.js';
 
@@ -36,12 +36,10 @@ export const getStartRequests = (input: ParsedInput): Request[] => {
 };
 
 export const getArticleFeedUrl = (league: Leagues, offset: number): string => {
-    const pubkey = `espn-en-${league}-index`;
-
     const url = new URL(`/apis/v3/cached/contentEngine/oneFeed/leagues/${league}`, ONEFEED_BASE_URL);
     url.searchParams.set('offset', offset.toString());
     url.searchParams.set('limit', ARTICLE_FEED_LIMIT.toString());
-    url.searchParams.set('pubkey', pubkey);
+    url.searchParams.set('pubkey', getArticleFeedPubKey(league));
     return url.toString();
 };
 
@@ -115,4 +113,9 @@ const getNewsStartRequests = (input: ParsedInput): Request[] => {
             },
         });
     });
+};
+
+const getArticleFeedPubKey = (league: Leagues): string => {
+    const pubkeyLeaguePart = ARTICLE_FEED_PUBKEYS[league] ?? league;
+    return `espn-en-${pubkeyLeaguePart}-index`;
 };
