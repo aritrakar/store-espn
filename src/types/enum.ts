@@ -19,6 +19,8 @@ export enum Labels {
     ScoreDates = 'scoreDates',
     ScoreBoard = 'scoreBoard',
     MatchDetail = 'matchDetail',
+    ArticleFeed = 'articleFeed',
+    ArticleDetail = 'articleDetail',
 }
 
 export enum SeasonTypes {
@@ -31,6 +33,7 @@ export enum SeasonTypes {
 export enum ResultTypes {
     MatchList = 'matchList',
     MatchDetail = 'matchDetail',
+    Article = 'article',
 }
 
 export enum BaseballPlayTypes {

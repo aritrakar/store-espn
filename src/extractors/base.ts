@@ -1,7 +1,14 @@
 import { log } from 'crawlee';
-import { BoxScoreResponse, CompetitionResponse, EventSummaryResponse, VenueResponse } from '../types/response/base.js';
-import { CompetitionData, CompetitorData, MatchDetailData, MatchPlayerData } from '../types/dataset/base.js';
-import { ResultTypes } from '../types/enum.js';
+import {
+    ArticleResponse,
+    BoxScoreResponse,
+    CompetitionResponse,
+    EventSummaryResponse,
+    VenueResponse,
+} from '../types/response/base.js';
+import { ArticleData, CompetitionData, CompetitorData, MatchDetailData, MatchPlayerData } from '../types/dataset/base.js';
+import { Leagues, ResultTypes } from '../types/enum.js';
+import { isArticleDetailUrl } from '../tools/url.js';
 
 /**
  * Extracts general data about match.
@@ -123,6 +130,43 @@ export const getTimeInSeconds = (
 
     const secondsInPastPeriods = (pastRegulationPeriods * regulationLength) + (pastOvertimePeriods * overtimeLength);
     return secondsInPastPeriods + secondsFromPeriodStart;
+};
+
+/**
+ * Some articles in feed already have the article content. For these we create the dataset object here.
+ * If article does not have story, return url of article detail.
+ *
+ * @param articles
+ * @param league
+ */
+export const getArticleData = (articles: ArticleResponse[], league: Leagues): (ArticleData | string | null)[] => {
+    return articles.flatMap((article) => {
+        if (article.inlines) return getArticleData(article.inlines, league);
+        return getSingleArticleData(article, league);
+    });
+};
+
+export const getSingleArticleData = (article: ArticleResponse, league: Leagues): ArticleData | string | null => {
+    if (!article.links?.web?.href) return null;
+
+    const articleUrl = article.links.web.href;
+    if (!article.story) {
+        if (!isArticleDetailUrl(articleUrl)) return null;
+        return articleUrl;
+    }
+
+    const imageUrl = article.images[0]?.url ?? null;
+
+    return {
+        resultType: ResultTypes.Article,
+        league,
+        title: article.headline,
+        description: article.description,
+        content: article.story,
+        url: article.links.web.href,
+        imageUrl,
+        publishedAt: article.published,
+    };
 };
 
 const getFormattedVenue = (venueResponse: VenueResponse | undefined) => {

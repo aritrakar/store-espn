@@ -33,6 +33,7 @@ export const parseInput = (input: InputSchema): ParsedInput => {
         leagues,
         games,
         gameDetailsLeague,
+        newsLeagues,
     } = input;
 
     const parsedYears = years.map((year) => parseInt(year, 10));
@@ -68,6 +69,10 @@ export const parseInput = (input: InputSchema): ParsedInput => {
 
     const gameDetailsSport = getSportByLeague(gameDetailsLeague);
 
+    if (newsLeagues && typeof newsLeagues.length !== 'number') {
+        throw new Error('Provided invalid newsLeagues input');
+    }
+
     return {
         scrapeMatchList,
         years: parsedYears,
@@ -77,6 +82,8 @@ export const parseInput = (input: InputSchema): ParsedInput => {
         scrapeMatchDetails,
         gameDetailsLeague,
         gameDetailsSport,
+        scrapeNews: newsLeagues && newsLeagues.length > 0,
+        newsLeagues,
     };
 };
 

@@ -1,4 +1,4 @@
-import { ResultTypes } from '../enum.js';
+import { Leagues, ResultTypes } from '../enum.js';
 
 export type VenueData = {
     capacity: number,
@@ -42,4 +42,15 @@ export interface MatchDetailData extends CompetitionData {
     officials: string[],
     players: MatchPlayerData[],
     resultType: ResultTypes,
+}
+
+export interface ArticleData {
+    resultType: ResultTypes,
+    league: Leagues,
+    title: string,
+    description: string,
+    content: string,
+    url: string,
+    imageUrl: string | null,
+    publishedAt: string,
 }

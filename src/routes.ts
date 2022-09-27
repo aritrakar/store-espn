@@ -1,13 +1,24 @@
 import { createHttpRouter, Request } from 'crawlee';
 import { Actor } from 'apify';
 import { Labels, ResultTypes, Sports } from './types/enum.js';
-import { ScoreboardResponse, StandingsResponse } from './types/response/base.js';
+import {
+    ArticleDetailResponse,
+    ArticleFeedResponse,
+    ScoreboardResponse,
+    StandingsResponse,
+} from './types/response/base.js';
 import { getDatesBetween } from './tools/generic.js';
-import { getScoreboardUrl } from './tools/url.js';
+import { getArticleDetailUrl, getArticleFeedUrl, getScoreboardUrl } from './tools/url.js';
 import { getBaseballMatchInformationData } from './extractors/baseball.js';
 import { getBasketballMatchInformationData } from './extractors/basketball.js';
 import { getHockeyMatchInformationData } from './extractors/hockey.js';
-import { getCompetitionData, getGeneralMatchInformationData } from './extractors/base.js';
+import {
+    getArticleData,
+    getCompetitionData,
+    getGeneralMatchInformationData,
+    getSingleArticleData,
+} from './extractors/base.js';
+import { ARTICLE_FEED_LIMIT } from './constants.js';
 
 export const router = createHttpRouter();
 
@@ -122,4 +133,66 @@ router.addHandler(Labels.MatchDetail, async ({ json, log, request }) => {
     } catch (err) {
         throw new Error(`Unable to parse match detail - ${request.loadedUrl}, Error: ${err}`);
     }
+});
+
+/**
+ * Enqueues article detail requests.
+ * First request handles pagination.
+ */
+router.addHandler(Labels.ArticleFeed, async ({ json, log, request, crawler }) => {
+    const { label, offset, league } = request.userData;
+    log.info(`${label}: Handling article list - ${request.url}`);
+    const response = json as ArticleFeedResponse;
+
+    const parsedFeedItems = response.feed
+        .flatMap((feedItem) => getArticleData(feedItem.data.now, league));
+
+    const articles = parsedFeedItems.filter((feedItem) => feedItem && typeof feedItem === 'object');
+    await Actor.pushData(articles);
+
+    const articleUrls = parsedFeedItems.filter((feedItem) => typeof feedItem === 'string') as string[];
+    const articleDetailRequests = articleUrls.map((articleUrl) => {
+        return new Request({
+            url: getArticleDetailUrl(articleUrl),
+            userData: {
+                label: Labels.ArticleDetail,
+                league,
+            },
+        });
+    });
+
+    await crawler.addRequests(articleDetailRequests);
+
+    // Enqueue other pages
+    if (offset === 0) {
+        const feedRequests = [];
+        for (let tmpOffset = ARTICLE_FEED_LIMIT; tmpOffset < response.resultsCount; tmpOffset += ARTICLE_FEED_LIMIT) {
+            feedRequests.push(new Request({
+                url: getArticleFeedUrl(league, tmpOffset),
+                userData: {
+                    label: Labels.ArticleFeed,
+                    offset: tmpOffset,
+                    league,
+                },
+            }));
+        }
+        await crawler.addRequests(feedRequests);
+    }
+});
+
+/**
+ * Saves article data.
+ */
+router.addHandler(Labels.ArticleDetail, async ({ json, log, request }) => {
+    const { label, league } = request.userData;
+    log.info(`${label}: Handling article detail - ${request.url}`);
+    const response = json as ArticleDetailResponse;
+
+    const article = getSingleArticleData(response.content, league);
+    if (!article || typeof article === 'string') {
+        log.warning(`Article detail could not be parsed - ${request.url}`);
+        return;
+    }
+
+    await Actor.pushData(article);
 });

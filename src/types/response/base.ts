@@ -118,8 +118,37 @@ export interface EventSummaryResponse {
     boxscore: BoxScoreResponse,
 }
 
-export type ScoreboardResponse = {
+export interface ScoreboardResponse {
     events: {
         competitions: CompetitionResponse[]
     }[]
+}
+
+export interface ArticleFeedResponse {
+    feed: {
+        data: {
+            now: ArticleResponse[]
+        }
+    }[],
+    resultsCount: number,
+}
+
+export interface ArticleDetailResponse {
+    content: ArticleResponse,
+}
+
+export interface ArticleResponse {
+    images: {
+        url: string,
+    }[],
+    headline: string,
+    description: string,
+    story: string,
+    links: {
+        web: {
+            href: string
+        }
+    },
+    published: string,
+    inlines?: ArticleResponse[],
 }

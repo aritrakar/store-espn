@@ -20,7 +20,7 @@
         "seasonTypes": {
             "title": "Season types to scrape",
             "type": "array",
-            "description": "Possible values: pre - Pre-season, reg - Regular season, post - Post-season (/Playoff), off - Off-season",
+            "description": "Allowed values: pre - Pre-season, reg - Regular season, post - Post-season (/Playoff), off - Off-season",
             "editor": "stringList",
             "prefill": ["reg", "post"],
             "patternValue": "(\\bpre\\b)|(\\breg\\b)|(\\bpost\\b)|(\\boff\\b)"
@@ -28,7 +28,7 @@
         "leagues": {
             "title": "Leagues to scrape",
             "type": "array",
-            "description": "Possible values: mlb, nhl, nba, wnba, nfl, mens-college-basketball, womens-college-basketball",
+            "description": "Allowed values: mlb, nhl, nba, wnba, nfl, mens-college-basketball, womens-college-basketball",
             "editor": "stringList",
             "prefill": ["mlb"],
             "patternValue": "(\\bmlb\\b)|(\\bnhl\\b)|(\\bnba\\b)|(\\bwnba\\b)|(\\bnfl\\b)|(\\bmens-college-basketball\\b)|(\\bwomens-college-basketball\\b)"
@@ -44,10 +44,18 @@
         "gameDetailsLeague": {
             "title": "League of games to scrape",
             "type": "string",
-            "description": "Possible values: mlb, nhl, nba, wnba, nfl, mens-college-basketball, womens-college-basketball",
+            "description": "Allowed values: mlb, nhl, nba, wnba, nfl, mens-college-basketball, womens-college-basketball",
             "editor": "textfield",
             "prefill": "mlb",
             "pattern": "(\\bmlb\\b)|(\\bnhl\\b)|(\\bnba\\b)|(\\bwnba\\b)|(\\bnfl\\b)|(\\bmens-college-basketball\\b)|(\\bwomens-college-basketball\\b)"
+        },
+        "newsLeagues": {
+            "title": "Leagues to scrape news for",
+            "type": "array",
+            "description": "Allowed values: mlb, nhl, nba, wnba, nfl, mens-college-basketball, womens-college-basketball",
+            "editor": "stringList",
+            "prefill": ["mlb"],
+            "patternValue": "(\\bmlb\\b)|(\\bnhl\\b)|(\\bnba\\b)|(\\bwnba\\b)|(\\bnfl\\b)|(\\bmens-college-basketball\\b)|(\\bwomens-college-basketball\\b)"
         }
     }
 }

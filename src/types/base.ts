@@ -7,15 +7,18 @@ export type InputSchema = {
     leagues: Leagues[],
     games: string[],
     gameDetailsLeague: Leagues,
+    newsLeagues: Leagues[]
 }
 
 export type ParsedInput = {
     scrapeMatchList: boolean,
+    scrapeMatchDetails: boolean,
+    scrapeNews: boolean,
     years: number[],
+    games: number[],
     seasonTypes: SeasonTypes[]
     leagues: Leagues[],
-    scrapeMatchDetails: boolean,
-    games: number[],
     gameDetailsLeague: Leagues,
     gameDetailsSport: Sports,
+    newsLeagues: Leagues[]
 }
