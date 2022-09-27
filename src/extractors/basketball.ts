@@ -17,16 +17,15 @@ export const getBasketballMatchInformationData = (eventSummary: BasketballEventS
 };
 
 const getBasketballScoringData = (eventSummary: BasketballEventSummaryResponse, athletes: Map<string, MatchPlayerData>): BasketballScoringData[] => {
-    const parsedScoringData: BasketballScoringData[] = [];
-
     const periodCount = eventSummary.format.regulation.periods;
     const regulationLength = eventSummary.format.regulation.clock;
     const overtimeLength = eventSummary.format.overtime.clock;
 
-    for (const play of eventSummary.plays) {
-        if (!play.shootingPlay) continue;
-        if (play.participants.length === 0) continue;
+    const filteredShootingPlays = eventSummary.plays
+        .filter((play) => play.shootingPlay)
+        .filter((play) => play.participants.length > 0);
 
+    return filteredShootingPlays.map((play) => {
         const playerId = play.participants[0].athlete.id;
         const playerData = athletes.get(playerId);
         const player = playerData ? {
@@ -35,7 +34,7 @@ const getBasketballScoringData = (eventSummary: BasketballEventSummaryResponse, 
             team: playerData.team,
         } : undefined;
 
-        parsedScoringData.push({
+        return {
             id: play.id,
             homeScore: play.homeScore,
             awayScore: play.awayScore,
@@ -44,10 +43,8 @@ const getBasketballScoringData = (eventSummary: BasketballEventSummaryResponse, 
             type: getBasketballPlayType(play),
             player,
             timeInSeconds: getTimeInSeconds(play.period.number, play.clock.displayValue, periodCount, regulationLength, overtimeLength, true),
-        });
-    }
-
-    return parsedScoringData;
+        };
+    });
 };
 
 const getBasketballPlayType = (play: BasketballPlayInformation): BasketballScoreTypes => {
