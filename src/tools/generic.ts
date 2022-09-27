@@ -28,17 +28,19 @@ export const parseInput = (input: InputSchema): ParsedInput => {
 
     const {
         scrapeMatchList,
-        years,
-        seasonTypes,
-        leagues,
-        games,
-        gameDetailsLeague,
+        matchListYears,
+        matchListSeasonTypes,
+        matchListLeagues,
+        scrapeMatchDetails,
+        detailMatches,
+        matchDetailsLeague,
+        scrapeNews,
         newsLeagues,
     } = input;
 
-    const parsedYears = years.map((year) => parseInt(year, 10));
+    const parsedYears = matchListYears.map((year) => parseInt(year, 10));
 
-    const parsedSeasonTypes = seasonTypes.map((seasonType) => {
+    const parsedSeasonTypes = matchListSeasonTypes.map((seasonType) => {
         if (!isEnumType<SeasonTypes>(seasonType)) {
             throw new Error('Provided invalid season type input');
         }
@@ -46,7 +48,7 @@ export const parseInput = (input: InputSchema): ParsedInput => {
         return seasonType as SeasonTypes;
     });
 
-    const parsedLeagues = leagues.map((league) => {
+    const parsedLeagues = matchListLeagues.map((league) => {
         if (!isEnumType<Leagues>(league)) {
             throw new Error('Provided invalid season type input');
         }
@@ -54,20 +56,19 @@ export const parseInput = (input: InputSchema): ParsedInput => {
         return league as Leagues;
     });
 
-    const parsedGames = games
-        .map((rawGameInput) => getGameIdFromInput(rawGameInput))
+    const parsedGames = detailMatches
+        .map((rawMatchInput) => getGameIdFromInput(rawMatchInput))
         .filter((gameId) => (gameId !== null)) as number[];
-    const scrapeMatchDetails = games.length > 0;
 
-    if (scrapeMatchDetails && !gameDetailsLeague) {
+    if (scrapeMatchDetails && !matchDetailsLeague) {
         throw new Error('For game details scraping, you have to provide gameDetailsLeague input');
     }
 
-    if (!isEnumType<Leagues>(gameDetailsLeague as Leagues)) {
+    if (!isEnumType<Leagues>(matchDetailsLeague as Leagues)) {
         throw new Error('Provided invalid gamesDetailsLeague input');
     }
 
-    const gameDetailsSport = getSportByLeague(gameDetailsLeague);
+    const matchDetailsSport = getSportByLeague(matchDetailsLeague);
 
     if (newsLeagues && typeof newsLeagues.length !== 'number') {
         throw new Error('Provided invalid newsLeagues input');
@@ -75,14 +76,14 @@ export const parseInput = (input: InputSchema): ParsedInput => {
 
     return {
         scrapeMatchList,
-        years: parsedYears,
-        seasonTypes: parsedSeasonTypes,
-        leagues: parsedLeagues,
-        games: parsedGames,
+        matchListYears: parsedYears,
+        matchListSeasonTypes: parsedSeasonTypes,
+        matchListLeagues: parsedLeagues,
         scrapeMatchDetails,
-        gameDetailsLeague,
-        gameDetailsSport,
-        scrapeNews: newsLeagues && newsLeagues.length > 0,
+        detailMatches: parsedGames,
+        matchDetailsLeague,
+        matchDetailsSport,
+        scrapeNews,
         newsLeagues,
     };
 };

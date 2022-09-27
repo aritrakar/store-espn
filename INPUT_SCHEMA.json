@@ -9,7 +9,7 @@
             "description": "Actor will scrape matches for given leagues, seasons and season types",
             "default": false
         },
-        "years": {
+        "matchListYears": {
             "title": "Years to scrape",
             "type": "array",
             "description": "For sports, that have season partially in two years, use the year when season ends",
@@ -17,7 +17,7 @@
             "prefill": ["2022"],
             "patternValue": "[0-9]{4}"
         },
-        "seasonTypes": {
+        "matchListSeasonTypes": {
             "title": "Season types to scrape",
             "type": "array",
             "description": "Allowed values: pre - Pre-season, reg - Regular season, post - Post-season (/Playoff), off - Off-season",
@@ -25,7 +25,7 @@
             "prefill": ["reg", "post"],
             "patternValue": "(\\bpre\\b)|(\\breg\\b)|(\\bpost\\b)|(\\boff\\b)"
         },
-        "leagues": {
+        "matchListLeagues": {
             "title": "Leagues to scrape",
             "type": "array",
             "description": "Allowed values: mlb, nhl, nba, wnba, nfl, mens-college-basketball, womens-college-basketball",
@@ -33,7 +33,13 @@
             "prefill": ["mlb"],
             "patternValue": "(\\bmlb\\b)|(\\bnhl\\b)|(\\bnba\\b)|(\\bwnba\\b)|(\\bnfl\\b)|(\\bmens-college-basketball\\b)|(\\bwomens-college-basketball\\b)"
         },
-        "games": {
+        "scrapeMatchDetails": {
+            "title": "Scrape details of matches",
+            "type": "boolean",
+            "description": "Actor will scrape matches given by URLs/IDs in ",
+            "default": false
+        },
+        "detailMatches": {
             "title": "Games to scrape",
             "type": "array",
             "description": "Either game ID (e.g. 401461551), or game URL (e.g. https://www.espn.com/nhl/game/_/gameId/401461551)",
@@ -41,13 +47,19 @@
             "prefill": ["reg", "post"],
             "patternValue": "(\\bpre\\b)|(\\breg\\b)|(\\bpost\\b)|(\\boff\\b)"
         },
-        "gameDetailsLeague": {
+        "matchDetailsLeague": {
             "title": "League of games to scrape",
             "type": "string",
             "description": "Allowed values: mlb, nhl, nba, wnba, nfl, mens-college-basketball, womens-college-basketball",
             "editor": "textfield",
             "prefill": "mlb",
             "pattern": "(\\bmlb\\b)|(\\bnhl\\b)|(\\bnba\\b)|(\\bwnba\\b)|(\\bnfl\\b)|(\\bmens-college-basketball\\b)|(\\bwomens-college-basketball\\b)"
+        },
+        "scrapeNews": {
+            "title": "Scrape list of matches",
+            "type": "boolean",
+            "description": "Actor will scrape matches for given leagues, seasons and season types",
+            "default": false
         },
         "newsLeagues": {
             "title": "Leagues to scrape news for",

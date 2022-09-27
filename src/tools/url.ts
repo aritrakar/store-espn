@@ -56,22 +56,22 @@ export const getArticleDetailUrl = (webUrl: string): string => {
 };
 
 const getMatchListStartRequests = (input: ParsedInput): Request[] => {
-    if (input.years.length === 0) return [];
-    if (input.seasonTypes.length === 0) return [];
+    if (input.matchListYears.length === 0) return [];
+    if (input.matchListSeasonTypes.length === 0) return [];
 
     // For each league, we have enqueue one starting ScoreDates request
     const requests = [];
-    for (const league of input.leagues) {
+    for (const league of input.matchListLeagues) {
         const sport = getSportByLeague(league);
         if (!sport) continue;
 
         requests.push(new Request({
             // The year is irrelevant, standings endpoint returns information about all seasons
-            url: getStandingsUrl(sport, league, input.years[0]),
+            url: getStandingsUrl(sport, league, input.matchListYears[0]),
             userData: {
                 label: Labels.ScoreDates,
-                seasons: input.years,
-                seasonTypes: input.seasonTypes,
+                seasons: input.matchListYears,
+                seasonTypes: input.matchListSeasonTypes,
                 sport,
                 league,
             },
@@ -83,18 +83,18 @@ const getMatchListStartRequests = (input: ParsedInput): Request[] => {
 
 const getMatchGamesStartRequests = (input: ParsedInput): Request[] => {
     const {
-        games,
-        gameDetailsSport,
-        gameDetailsLeague,
+        detailMatches,
+        matchDetailsSport,
+        matchDetailsLeague,
     } = input;
 
-    return games.map((game) => {
+    return detailMatches.map((match) => {
         return new Request({
-            url: getGameSummaryUrl(gameDetailsSport, gameDetailsLeague, game),
+            url: getGameSummaryUrl(matchDetailsSport, matchDetailsLeague, match),
             userData: {
                 label: Labels.MatchDetail,
-                sport: gameDetailsSport,
-                league: gameDetailsLeague,
+                sport: matchDetailsSport,
+                league: matchDetailsLeague,
             },
         });
     });

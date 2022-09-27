@@ -4,6 +4,7 @@ import { router } from './routes.js';
 import { parseInput } from './tools/generic.js';
 import { getStartRequests } from './tools/url.js';
 import { InputSchema } from './types/base.js';
+import { CONCURRENCY } from './constants.js';
 
 await Actor.init();
 
@@ -16,10 +17,11 @@ if (input.debug) {
 
 const parsedInput = parseInput(input);
 const startUrls = getStartRequests(parsedInput);
-// const proxyConfiguration = await Actor.createProxyConfiguration();
+const proxyConfiguration = await Actor.createProxyConfiguration();
 
 const crawler = new HttpCrawler({
-    // proxyConfiguration,
+    proxyConfiguration,
+    maxConcurrency: CONCURRENCY,
     requestHandler: router,
 });
 
