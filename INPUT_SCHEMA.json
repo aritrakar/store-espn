@@ -1,9 +1,10 @@
 {
-    "title": "CheerioCrawler Template",
+    "title": "ESPN.com actor",
     "type": "object",
     "schemaVersion": 1,
     "properties": {
         "scrapeMatchList": {
+            "sectionCaption": "Match result scraping",
             "title": "Scrape list of matches",
             "type": "boolean",
             "description": "Actor will scrape matches for given leagues, seasons and season types",
@@ -34,6 +35,7 @@
             "patternValue": "(\\bmlb\\b)|(\\bnhl\\b)|(\\bnba\\b)|(\\bwnba\\b)|(\\bnfl\\b)|(\\bmens-college-basketball\\b)|(\\bwomens-college-basketball\\b)"
         },
         "scrapeMatchDetails": {
+            "sectionCaption": "Match detail scraping",
             "title": "Scrape details of matches",
             "type": "boolean",
             "description": "Actor will scrape matches given by URLs/IDs in ",
@@ -44,30 +46,60 @@
             "type": "array",
             "description": "Either game ID (e.g. 401461551), or game URL (e.g. https://www.espn.com/nhl/game/_/gameId/401461551)",
             "editor": "stringList",
-            "prefill": ["reg", "post"],
-            "patternValue": "(\\bpre\\b)|(\\breg\\b)|(\\bpost\\b)|(\\boff\\b)"
+            "prefill": []
         },
         "matchDetailsLeague": {
-            "title": "League of games to scrape",
+            "title": "League of matches to scrape",
             "type": "string",
-            "description": "Allowed values: mlb, nhl, nba, wnba, nfl, mens-college-basketball, womens-college-basketball",
-            "editor": "textfield",
+            "description": "League of matches to scrape",
+            "editor": "select",
             "prefill": "mlb",
-            "pattern": "(\\bmlb\\b)|(\\bnhl\\b)|(\\bnba\\b)|(\\bwnba\\b)|(\\bnfl\\b)|(\\bmens-college-basketball\\b)|(\\bwomens-college-basketball\\b)"
+            "enum": [
+                "mlb",
+                "nhl",
+                "nba",
+                "wnba",
+                "mens-college-basketball",
+                "womens-college-basketball"
+            ],
+            "enumTitles": [
+                "MLB",
+                "NHL",
+                "NBA",
+                "WNBA",
+                "Men's College Basketball",
+                "Women's College Basketball"
+            ]
         },
         "scrapeNews": {
-            "title": "Scrape list of matches",
+            "sectionCaption": "Article scraping",
+            "title": "Scrape articles",
             "type": "boolean",
-            "description": "Actor will scrape matches for given leagues, seasons and season types",
+            "description": "Actor will scrape news feed articles",
             "default": false
         },
-        "newsLeagues": {
-            "title": "Leagues to scrape news for",
-            "type": "array",
-            "description": "Allowed values: mlb, nhl, nba, wnba, nfl, mens-college-basketball, womens-college-basketball",
-            "editor": "stringList",
-            "prefill": ["mlb"],
-            "patternValue": "(\\bmlb\\b)|(\\bnhl\\b)|(\\bnba\\b)|(\\bwnba\\b)|(\\bnfl\\b)|(\\bmens-college-basketball\\b)|(\\bwomens-college-basketball\\b)"
+        "newsLeague": {
+            "title": "News league",
+            "type": "string",
+            "description": "League to scrape news feed articles",
+            "editor": "select",
+            "prefill": "mlb",
+            "enum": [
+                "mlb",
+                "nhl",
+                "nba",
+                "wnba",
+                "mens-college-basketball",
+                "womens-college-basketball"
+            ],
+            "enumTitles": [
+                "MLB",
+                "NHL",
+                "NBA",
+                "WNBA",
+                "Men's College Basketball",
+                "Women's College Basketball"
+            ]
         }
     }
 }

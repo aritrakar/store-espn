@@ -10,7 +10,7 @@ export type InputSchema = {
     detailMatches: string[],
     matchDetailsLeague: Leagues,
     scrapeNews: boolean,
-    newsLeagues: Leagues[]
+    newsLeague: Leagues
 }
 
 export type ParsedInput = {
@@ -23,5 +23,5 @@ export type ParsedInput = {
     matchDetailsLeague: Leagues,
     matchDetailsSport: Sports,
     scrapeNews: boolean,
-    newsLeagues: Leagues[]
+    newsLeague: Leagues
 }

@@ -31,7 +31,7 @@ export const getStartRequests = (input: ParsedInput): Request[] => {
     const requests = [];
     if (input.scrapeMatchList) requests.push(...getMatchListStartRequests(input));
     if (input.scrapeMatchDetails) requests.push(...getMatchGamesStartRequests(input));
-    if (input.scrapeNews) requests.push(...getNewsStartRequests(input));
+    if (input.scrapeNews) requests.push(getNewsStartRequest(input));
     return requests;
 };
 
@@ -100,18 +100,16 @@ const getMatchGamesStartRequests = (input: ParsedInput): Request[] => {
     });
 };
 
-const getNewsStartRequests = (input: ParsedInput): Request[] => {
-    const { newsLeagues } = input;
+const getNewsStartRequest = (input: ParsedInput): Request => {
+    const { newsLeague } = input;
     const offset = 0;
-    return newsLeagues.map((league) => {
-        return new Request({
-            url: getArticleFeedUrl(league, offset),
-            userData: {
-                label: Labels.ArticleFeed,
-                offset,
-                league,
-            },
-        });
+    return new Request({
+        url: getArticleFeedUrl(newsLeague, offset),
+        userData: {
+            label: Labels.ArticleFeed,
+            offset,
+            league: newsLeague,
+        },
     });
 };
 
