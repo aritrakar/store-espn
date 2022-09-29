@@ -4,29 +4,29 @@
 - Scraping articles for NBA, NHL, MLB, NFL and college basketball
 
 # Cost of usage
-You can get up to 50 000 results for 1 USD. Number of results per 1 USD varies according to type of scraped results and according to scraped league.
+You can get up to 50 000 results for 1 USD. Number of results per 1 USD varies according to type of scraped data and according to scraped league.
 
 # Input parameters
 - **scrapeMatchList** - if true, actor will scrape match results according to other inputs
 - **matchListYears** - array of years, for which actor should scrape the match results
 - **matchListSeasonTypes** - type of season, for which actor should scrape the match results
- - Allowed values:
-  - pre - Pre-season
-  - reg - Regular season
-  - post - Post-season/Play-off
-  - off - Off-season
+    - Allowed values:
+    - pre - Pre-season
+    - reg - Regular season
+    - post - Post-season/Play-off
+    - off - Off-season
 - **matchListLeagues** - leagues, for which actor should scrape the match results
- - Allowed values: mlb, nhl, nba, wnba, nfl, mens-college-basketball, womens-college-basketball
+  - Allowed values: mlb, nhl, nba, wnba, nfl, mens-college-basketball, womens-college-basketball
 - **scrapeMatchDetails** - if true, actor will scrape detail data for specified matches
 - **detailMatches** - Array of matches, for which actor should scrape the detailed results
- - Allowed formats:
-  - ID: e.g.: 401126339
-  - URL of match detail e.g.: https://www.espn.com/nhl/game/\_/gameId/401126339
+    - Allowed formats:
+    - ID: e.g.: 401126339
+    - URL of match detail e.g.: https://www.espn.com/nhl/game/\_/gameId/401126339
 - **matchDetailsLeague** - League of match/matches
- - Allowed values: mlb, nhl, nba, wnba, nfl, mens-college-basketball, womens-college-basketball
+    - Allowed values: mlb, nhl, nba, wnba, nfl, mens-college-basketball, womens-college-basketball
 - **scrapeNews** - if true, actor will scrape articles from news feed of given league
 - **newsLeague** - league, for which actor should scrape the articles
- - Allowed values: mlb, nhl, nba, wnba, nfl, mens-college-basketball, womens-college-basketball
+  - Allowed values: mlb, nhl, nba, wnba, nfl, mens-college-basketball, womens-college-basketball
 - **debug** - if true, actor will print out additional information
 
 ## Input example
@@ -41,7 +41,7 @@ You can get up to 50 000 results for 1 USD. Number of results per 1 USD varies a
     "detailMatches": ["https://www.espn.com/nba/game/_/gameId/401360779"],
     "matchDetailsLeague": "nba",
     "scrapeNews": true,
-    "newsLeagues": ["nhl"]
+    "newsLeague": "nhl"
 }
 ```
 
