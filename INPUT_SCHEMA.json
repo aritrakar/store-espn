@@ -11,7 +11,7 @@
             "default": false
         },
         "matchListYears": {
-            "title": "Years to scrape",
+            "title": "Years",
             "type": "array",
             "description": "For sports, that have season partially in two years, use the year when season ends",
             "editor": "stringList",
@@ -19,7 +19,7 @@
             "patternValue": "[0-9]{4}"
         },
         "matchListSeasonTypes": {
-            "title": "Season types to scrape",
+            "title": "Season types",
             "type": "array",
             "description": "Allowed values: pre - Pre-season, reg - Regular season, post - Post-season (/Playoff), off - Off-season",
             "editor": "stringList",
@@ -27,7 +27,7 @@
             "patternValue": "(\\bpre\\b)|(\\breg\\b)|(\\bpost\\b)|(\\boff\\b)"
         },
         "matchListLeagues": {
-            "title": "Leagues to scrape",
+            "title": "Leagues",
             "type": "array",
             "description": "Allowed values: mlb, nhl, nba, wnba, nfl, mens-college-basketball, womens-college-basketball",
             "editor": "stringList",
@@ -42,14 +42,14 @@
             "default": false
         },
         "detailMatches": {
-            "title": "Games to scrape",
+            "title": "Games",
             "type": "array",
             "description": "Either game ID (e.g. 401461551), or game URL (e.g. https://www.espn.com/nhl/game/_/gameId/401461551)",
             "editor": "stringList",
             "prefill": []
         },
         "matchDetailsLeague": {
-            "title": "League of matches to scrape",
+            "title": "League",
             "type": "string",
             "description": "League of matches to scrape",
             "editor": "select",
@@ -79,7 +79,7 @@
             "default": false
         },
         "newsLeague": {
-            "title": "News league",
+            "title": "League",
             "type": "string",
             "description": "League to scrape news feed articles",
             "editor": "select",
