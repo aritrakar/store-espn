@@ -65,7 +65,7 @@ export const getGeneralMatchInformationData = (eventSummary: EventSummaryRespons
     const { attendance } = eventSummary.gameInfo;
     const competitionData = getCompetitionData(eventSummary.header.competitions[0]);
     const officials = getOfficials(eventSummary);
-    const players = getPlayersData(eventSummary.boxscore);
+    const players = getPlayerData(eventSummary.boxscore);
     const venue = getFormattedVenue(eventSummary.gameInfo.venue);
 
     return {
@@ -180,7 +180,7 @@ const getFormattedVenue = (venueResponse: VenueResponse | undefined) => {
     };
 };
 
-const getPlayersData = (boxScore: BoxScoreResponse): MatchPlayerData[] => {
+const getPlayerData = (boxScore: BoxScoreResponse): MatchPlayerData[] => {
     const { players } = boxScore;
 
     // Parse statistics for each player
