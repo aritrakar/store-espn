@@ -211,7 +211,7 @@ const getPlayersData = (boxScore: BoxScoreResponse): MatchPlayerData[] => {
                     stats: playerStats,
                     team: team.abbreviation,
                     statType: type || undefined,
-                    position: athlete.athlete.position.abbreviation,
+                    position: athlete.athlete?.position?.abbreviation || null,
                     name: athlete.athlete.displayName,
                 });
             }

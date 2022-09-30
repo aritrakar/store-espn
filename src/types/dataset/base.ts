@@ -32,7 +32,7 @@ export interface CompetitionData {
 export interface MatchPlayerData {
     id: string,
     statType?: string,
-    position: string,
+    position: string | null,
     stats: Record<string, string>,
     team: string,
     name: string,
