@@ -6,7 +6,14 @@ import {
     EventSummaryResponse,
     VenueResponse,
 } from '../types/response/base.js';
-import { ArticleData, CompetitionData, CompetitorData, MatchDetailData, MatchPlayerData } from '../types/dataset/base.js';
+import {
+    ArticleData,
+    CompetitionData,
+    CompetitorData,
+    MatchDetailData,
+    MatchPlayerData,
+    VenueData,
+} from '../types/dataset/base.js';
 import { Leagues, ResultTypes } from '../types/enum.js';
 import { isArticleDetailUrl } from '../tools/url.js';
 
@@ -169,14 +176,14 @@ export const getSingleArticleData = (article: ArticleResponse, league: Leagues):
     };
 };
 
-const getFormattedVenue = (venueResponse: VenueResponse | undefined) => {
+const getFormattedVenue = (venueResponse: VenueResponse | undefined): VenueData | null => {
     if (!venueResponse) return null;
 
     return {
         capacity: venueResponse.capacity,
         fullName: venueResponse.fullName,
-        city: venueResponse.address.city,
-        state: venueResponse.address.state,
+        city: venueResponse.address?.city ?? null,
+        state: venueResponse.address?.state ?? null,
     };
 };
 

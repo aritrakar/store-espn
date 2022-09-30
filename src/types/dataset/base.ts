@@ -3,8 +3,8 @@ import { Leagues, ResultTypes } from '../enum.js';
 export type VenueData = {
     capacity: number,
     fullName: string,
-    city: string,
-    state: string,
+    city: string | null,
+    state: string | null,
 }
 
 export interface CompetitorData {
