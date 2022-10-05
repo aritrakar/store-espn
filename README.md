@@ -133,7 +133,9 @@ You can get up to 50 000 results for 1 USD. Result count per 1 USD varies accord
 		"Zach Zarba",
 		"Kevin Cutler",
 		"Nick Buchert"
-	]
+	],
+    "sport": "basketball",
+    "league": "nba"
 }
 ```
 ### Basketball

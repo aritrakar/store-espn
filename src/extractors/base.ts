@@ -76,7 +76,6 @@ export const getGeneralMatchInformationData = (eventSummary: EventSummaryRespons
     const venue = getFormattedVenue(eventSummary.gameInfo.venue);
 
     return {
-        resultType: ResultTypes.MatchDetail,
         ...competitionData,
         officials,
         venue,

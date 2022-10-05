@@ -41,7 +41,6 @@ export interface MatchPlayerData {
 export interface MatchDetailData extends CompetitionData {
     officials: string[],
     players: MatchPlayerData[],
-    resultType: ResultTypes,
 }
 
 export interface ArticleData {

@@ -80,24 +80,26 @@ router.addHandler(Labels.ScoreBoard, async ({ json, log, request }) => {
     log.info(`${request.label}: Parsing one day scoreboard - ${request.url}`);
     const { year, type, sport, league } = request.userData;
     const response = json as ScoreboardResponse;
-    for (const event of response.events) {
-        try {
-            if (event.competitions.length === 0) continue;
+    try {
+        const matches = response.events
+            .map((event) => {
+                if (event.competitions.length === 0) return null;
 
-            const competition = event.competitions[0];
-            const competitionData = getCompetitionData(competition);
-            await Actor.pushData({
-                ...competitionData,
-                sport,
-                league,
-                season: year,
-                seasonType: type,
-                url: request.loadedUrl,
-                resultType: ResultTypes.MatchList,
-            });
-        } catch (err) {
-            throw new Error(`Unable to parse match list data - ${request.loadedUrl}, Error: ${err}`);
-        }
+                const competition = event.competitions[0];
+                const competitionData = getCompetitionData(competition);
+                return {
+                    resultType: ResultTypes.MatchList,
+                    ...competitionData,
+                    sport,
+                    league,
+                    season: year,
+                    seasonType: type,
+                };
+            })
+            .filter((match) => match !== null);
+        await Actor.pushData(matches);
+    } catch (err) {
+        throw new Error(`Unable to parse match list data - ${request.loadedUrl}, Error: ${err}`);
     }
 });
 
@@ -106,27 +108,47 @@ router.addHandler(Labels.ScoreBoard, async ({ json, log, request }) => {
  */
 router.addHandler(Labels.MatchDetail, async ({ json, log, request }) => {
     log.info(`${request.label}: Parsing match detail - ${request.url}`);
-    const { sport } = request.userData;
+    const { sport, league } = request.userData;
     try {
         switch (sport) {
             case Sports.Baseball: {
-                const data = getBaseballMatchInformationData(json);
-                await Actor.pushData(data);
+                const matchData = getBaseballMatchInformationData(json);
+                await Actor.pushData({
+                    resultType: ResultTypes.MatchDetail,
+                    ...matchData,
+                    sport,
+                    league,
+                });
                 break;
             }
             case Sports.Basketball: {
-                const data = getBasketballMatchInformationData(json);
-                await Actor.pushData(data);
+                const matchData = getBasketballMatchInformationData(json);
+                await Actor.pushData({
+                    resultType: ResultTypes.MatchDetail,
+                    ...matchData,
+                    sport,
+                    league,
+                });
                 break;
             }
             case Sports.Hockey: {
-                const data = getHockeyMatchInformationData(json);
-                await Actor.pushData(data);
+                const matchData = getHockeyMatchInformationData(json);
+                await Actor.pushData({
+                    resultType: ResultTypes.MatchDetail,
+                    ...matchData,
+                    sport,
+                    league,
+                });
                 break;
             }
             default: {
-                const data = getGeneralMatchInformationData(json);
-                await Actor.pushData(data);
+                const matchData = getGeneralMatchInformationData(json);
+                await Actor.pushData({
+                    resultType: ResultTypes.MatchDetail,
+                    ...matchData,
+                    sport,
+                    league,
+                });
                 break;
             }
         }
