@@ -1,12 +1,12 @@
-# Features
+## Features
 - Scraping all match results for NBA, NHL, MLB, NFL and college basketball
 - Scraping detailed match data for NBA, NHL, MLB and college basketball
 - Scraping articles for NBA, NHL, MLB, NFL and college basketball
 
-# Cost of usage
+## Cost of usage
 You can get up to 50 000 results for 1 USD. Result count per 1 USD varies according to the type of scraped data and according to the scraped league.
 
-# Input parameters
+## Input parameters
 - **scrapeMatchList** - if true, the actor will scrape match results according to other inputs
 - **matchListYears** - array of years, for which the actor should scrape the match results
 - **matchListSeasonTypes** - type of season, for which the actor should scrape the match results
@@ -45,8 +45,8 @@ You can get up to 50 000 results for 1 USD. Result count per 1 USD varies accord
 }
 ```
 
-# Output examples
-## Match list
+## Output examples
+### Match list
 
 ```json
 {
@@ -94,8 +94,8 @@ You can get up to 50 000 results for 1 USD. Result count per 1 USD varies accord
 
 ```
 
-## Match detail
-### Base information
+### Match detail
+#### Base information
 ```json
 
 {
@@ -138,7 +138,7 @@ You can get up to 50 000 results for 1 USD. Result count per 1 USD varies accord
     "league": "nba"
 }
 ```
-### Basketball
+#### Basketball
 All base information + basketball specific information
 ```json
 {
@@ -185,7 +185,7 @@ All base information + basketball specific information
 }
 
 ```
-### Hockey
+#### Hockey
 All base information + hockey specific information
 ```json
 {
