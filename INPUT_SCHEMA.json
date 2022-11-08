@@ -1,0 +1,105 @@
+{
+    "title": "ESPN.com actor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "scrapeMatchList": {
+            "sectionCaption": "Match result scraping",
+            "title": "Scrape list of matches",
+            "type": "boolean",
+            "description": "Actor will scrape matches for given leagues, seasons and season types",
+            "default": false
+        },
+        "matchListYears": {
+            "title": "Years",
+            "type": "array",
+            "description": "For sports, that have season partially in two years, use the year when season ends",
+            "editor": "stringList",
+            "prefill": ["2022"],
+            "patternValue": "[0-9]{4}"
+        },
+        "matchListSeasonTypes": {
+            "title": "Season types",
+            "type": "array",
+            "description": "Allowed values: pre - Pre-season, reg - Regular season, post - Post-season (/Playoff), off - Off-season",
+            "editor": "stringList",
+            "prefill": ["reg", "post"],
+            "patternValue": "(\\bpre\\b)|(\\breg\\b)|(\\bpost\\b)|(\\boff\\b)"
+        },
+        "matchListLeagues": {
+            "title": "Leagues",
+            "type": "array",
+            "description": "Allowed values: mlb, nhl, nba, wnba, nfl, mens-college-basketball, womens-college-basketball",
+            "editor": "stringList",
+            "prefill": ["mlb"],
+            "patternValue": "(\\bmlb\\b)|(\\bnhl\\b)|(\\bnba\\b)|(\\bwnba\\b)|(\\bnfl\\b)|(\\bmens-college-basketball\\b)|(\\bwomens-college-basketball\\b)"
+        },
+        "scrapeMatchDetails": {
+            "sectionCaption": "Match detail scraping",
+            "title": "Scrape details of matches",
+            "type": "boolean",
+            "description": "Actor will scrape matches given by URLs/IDs in ",
+            "default": false
+        },
+        "detailMatches": {
+            "title": "Games",
+            "type": "array",
+            "description": "Either game ID (e.g. 401461551), or game URL (e.g. https://www.espn.com/nhl/game/_/gameId/401461551)",
+            "editor": "stringList",
+            "prefill": []
+        },
+        "matchDetailsLeague": {
+            "title": "League",
+            "type": "string",
+            "description": "League of matches to scrape",
+            "editor": "select",
+            "prefill": "mlb",
+            "enum": [
+                "mlb",
+                "nhl",
+                "nba",
+                "wnba",
+                "mens-college-basketball",
+                "womens-college-basketball"
+            ],
+            "enumTitles": [
+                "MLB",
+                "NHL",
+                "NBA",
+                "WNBA",
+                "Men's College Basketball",
+                "Women's College Basketball"
+            ]
+        },
+        "scrapeNews": {
+            "sectionCaption": "Article scraping",
+            "title": "Scrape articles",
+            "type": "boolean",
+            "description": "Actor will scrape news feed articles",
+            "default": false
+        },
+        "newsLeague": {
+            "title": "League",
+            "type": "string",
+            "description": "League to scrape news feed articles",
+            "editor": "select",
+            "prefill": "mlb",
+            "enum": [
+                "mlb",
+                "nhl",
+                "nba",
+                "wnba",
+                "mens-college-basketball",
+                "womens-college-basketball"
+            ],
+            "enumTitles": [
+                "MLB",
+                "NHL",
+                "NBA",
+                "WNBA",
+                "Men's College Basketball",
+                "Women's College Basketball"
+            ]
+        }
+    }
+}
