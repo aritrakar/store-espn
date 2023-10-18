@@ -83,14 +83,15 @@
             "type": "string",
             "description": "League to scrape news feed articles",
             "editor": "select",
-            "prefill": "mlb",
+            "prefill": "nfl",
             "enum": [
                 "mlb",
                 "nhl",
                 "nba",
                 "wnba",
                 "mens-college-basketball",
-                "womens-college-basketball"
+                "womens-college-basketball",
+                "nfl"
             ],
             "enumTitles": [
                 "MLB",
@@ -98,7 +99,8 @@
                 "NBA",
                 "WNBA",
                 "Men's College Basketball",
-                "Women's College Basketball"
+                "Women's College Basketball",
+                "NFL"
             ]
         }
     }
